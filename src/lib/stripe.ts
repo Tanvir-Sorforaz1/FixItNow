@@ -54,7 +54,7 @@ export type StripeWebhookEvent<T = unknown> = {
 };
 
 type CheckoutSessionCreateInput = {
-	mode: "subscription";
+	mode: "subscription" | "payment";
 	payment_method_types?: string[];
 	customer_email: string;
 	client_reference_id: string;
@@ -62,9 +62,15 @@ type CheckoutSessionCreateInput = {
 	subscription_data?: {
 		metadata?: Record<string, string>;
 	};
+	payment_intent_data?: {
+		metadata?: Record<string, string>;
+	};
 	line_items: Array<{
-		price: string;
+		price?: string;
 		quantity: number;
+		currency?: string;
+		product_name?: string;
+		unit_amount?: number;
 	}>;
 	success_url: string;
 	cancel_url: string;
@@ -108,9 +114,25 @@ const checkoutSessionCreate = async (input: CheckoutSessionCreateInput) => {
 		}
 	}
 
+	if (input.payment_intent_data?.metadata) {
+		for (const [key, value] of Object.entries(input.payment_intent_data.metadata)) {
+			body.set(`payment_intent_data[metadata][${key}]`, value);
+		}
+	}
+
 	input.line_items.forEach((item, index) => {
-		body.set(`line_items[${index}][price]`, item.price);
 		body.set(`line_items[${index}][quantity]`, String(item.quantity));
+
+		if (item.price) {
+			body.set(`line_items[${index}][price]`, item.price);
+			return;
+		}
+
+		if (item.currency) {
+			body.set(`line_items[${index}][price_data][currency]`, item.currency);
+			body.set(`line_items[${index}][price_data][product_data][name]`, item.product_name ?? "Booking payment");
+			body.set(`line_items[${index}][price_data][unit_amount]`, String(item.unit_amount ?? 0));
+		}
 	});
 
 	return requestStripeApi<StripeCheckoutSession>("/checkout/sessions", {

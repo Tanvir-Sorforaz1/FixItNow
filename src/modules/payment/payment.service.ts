@@ -1,7 +1,7 @@
 import { Prisma } from "../../../generated/prisma/client.js";
 import prisma from "../../lib/prisma.js";
 import { AppError } from "../../errors/AppError.js";
-import { createProviderSession } from "./payment.utils.js";
+import { createStripePaymentSession } from "./payment.utils.js";
 import type { PaymentConfirmInput, PaymentCreateInput } from "./payment.interface.js";
 
 const create = async (userId: string, input: PaymentCreateInput) => {
@@ -19,7 +19,21 @@ const create = async (userId: string, input: PaymentCreateInput) => {
     throw new AppError(400, "Payment can only be created after booking is accepted");
   }
 
-  const session = await createProviderSession(input.provider, booking.id, Number(booking.amount));
+  const customer = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { email: true },
+  });
+
+  if (!customer?.email) {
+    throw new AppError(404, "Customer email not found");
+  }
+
+  const session = await createStripePaymentSession({
+    bookingId: booking.id,
+    amount: Number(booking.amount),
+    customerEmail: customer.email,
+    currency: "usd",
+  });
 
   return prisma.payment.upsert({
     where: { bookingId: booking.id },
@@ -29,17 +43,19 @@ const create = async (userId: string, input: PaymentCreateInput) => {
       transactionId: session.sessionId,
       amount: booking.amount,
       method: input.method ?? "CARD",
-      provider: input.provider,
+      provider: "STRIPE",
       status: "PENDING",
-      rawResponse: session as Prisma.InputJsonValue,
+      currency: "USD",
+      rawResponse: session.rawResponse as Prisma.InputJsonValue,
     },
     update: {
       transactionId: session.sessionId,
       amount: booking.amount,
       method: input.method ?? "CARD",
-      provider: input.provider,
+      provider: "STRIPE",
       status: "PENDING",
-      rawResponse: session as Prisma.InputJsonValue,
+      currency: "USD",
+      rawResponse: session.rawResponse as Prisma.InputJsonValue,
     },
   });
 };
