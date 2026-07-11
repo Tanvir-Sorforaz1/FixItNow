@@ -1,8 +1,11 @@
 import jwt from "jsonwebtoken";
+import config from "../config/index.js";
 
-const secret = process.env.JWT_SECRET ?? "fixitnow-secret";
-const expiresIn = (process.env.JWT_EXPIRES_IN ?? "7d") as jwt.SignOptions["expiresIn"];
-
+const secret = config.jwt_secret ;
+if (!secret) {
+  throw new Error("Missing JWT_SECRET environment variable");
+}
+const expiresIn = (config.jwt_expires_in ?? "7d") as jwt.SignOptions["expiresIn"];
 export type JwtUserPayload = {
   id: string;
   email: string;

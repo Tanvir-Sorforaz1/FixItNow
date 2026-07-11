@@ -1,4 +1,4 @@
-import { Prisma, type UserRole } from "@prisma/client";
+import { Prisma, type UserRole } from "../../../generated/prisma/client.js";
 import prisma from "../../lib/prisma.js";
 import { AppError } from "../../errors/AppError.js";
 import type { BookingInput } from "./booking.interface.js";

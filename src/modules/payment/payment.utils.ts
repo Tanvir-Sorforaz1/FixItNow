@@ -1,10 +1,11 @@
-import { createStripeSession } from "../../lib/stripe.js";
-import { createSslCommerzSession } from "../../lib/sslcommerz.js";
+import config from "../../config/index.js";
 
 export const createProviderSession = async (provider: "STRIPE" | "SSLCOMMERZ", bookingId: string, amount: number) => {
-  if (provider === "STRIPE") {
-    return createStripeSession({ bookingId, amount });
-  }
+  void amount;
 
-  return createSslCommerzSession({ bookingId, amount });
+  return {
+    provider,
+    sessionId: `${provider.toLowerCase()}_${bookingId}`,
+    paymentUrl: `${config.app_url ?? "http://localhost:5000"}/payments/${provider.toLowerCase()}/${bookingId}`,
+  };
 };

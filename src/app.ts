@@ -8,6 +8,7 @@ import categoryRoutes from "./modules/category/category.route.js";
 import paymentRoutes from "./modules/payment/payment.route.js";
 import reviewRoutes from "./modules/review/review.route.js";
 import serviceRoutes from "./modules/service/service.route.js";
+import subscriptionRoutes from "./modules/subscription/subscription.route.js";
 import technicianRoutes from "./modules/technician/technician.route.js";
 import userRoutes from "./modules/user/user.route.js";
 import notFound from "./middlewares/notFound.js";
@@ -16,7 +17,6 @@ import globalErrorHandler from "./middlewares/globalErrorHandler.js";
 const app: Application = express();
 
 app.use(cors());
-app.use(express.json());
 app.use(cookieParser());
 
 app.get("/", (_req: Request, res: Response) => {
@@ -25,6 +25,9 @@ app.get("/", (_req: Request, res: Response) => {
         message: "FixItNow API is running",
     });
 });
+
+app.use("/api/subscription", subscriptionRoutes);
+app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/services", serviceRoutes);

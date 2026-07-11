@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import type { UserRole } from "@prisma/client";
+import type { UserRole } from "../../../generated/prisma/client.js";
 import prisma from "../../lib/prisma.js";
 import { AppError } from "../../errors/AppError.js";
 import { signToken } from "../../utils/jwt.js";

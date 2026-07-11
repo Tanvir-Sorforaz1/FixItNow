@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "../../../generated/prisma/client.js";
 import prisma from "../../lib/prisma.js";
 import { AppError } from "../../errors/AppError.js";
 import type { ServiceInput } from "./service.interface.js";

@@ -1,0 +1,17 @@
+model TechnicianProfile {
+  id                 String      @id @default(cuid())
+  userId             String      @unique
+  user               User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio                String?
+  experience         Int         @default(0)
+  skills             String[]
+  hourlyRate         Decimal     @default(0)
+  location           String?
+  availability       Json?
+  isAvailable        Boolean     @default(true)
+  services           Service[]
+  bookings           Booking[]   @relation("TechnicianProfileBookings")
+  reviews            Review[]
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+}
