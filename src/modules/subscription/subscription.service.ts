@@ -1,4 +1,4 @@
-import { Prisma } from "../../../generated/prisma/client.js";
+import { Prisma } from "@prisma/client";
 import config from "../../config/index.js";
 import { AppError } from "../../errors/AppError.js";
 import prisma from "../../lib/prisma.js";

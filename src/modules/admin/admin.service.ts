@@ -1,4 +1,4 @@
-import { Prisma } from "../../../generated/prisma/client.js";
+import { Prisma } from "@prisma/client";
 import prisma from "../../lib/prisma.js";
 import { AppError } from "../../errors/AppError.js";
 import type { UserStatusInput } from "./admin.interface.js";
