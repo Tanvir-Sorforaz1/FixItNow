@@ -13,7 +13,7 @@ import technicianRoutes from "./modules/technician/technician.route.js";
 import userRoutes from "./modules/user/user.route.js";
 import notFound from "./middlewares/notFound.js";
 import globalErrorHandler from "./middlewares/globalErrorHandler.js";
-import config from "./config";
+import config from "./config/index.js";
 
 const app: Application = express();
 
