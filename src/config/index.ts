@@ -9,6 +9,7 @@ const config = {
     port: process.env.PORT,
     database_url: process.env.DATABASE_URL,
     app_url: process.env.APP_URL,
+    frontend_url: process.env.FRONTEND_URL,
     jwt_secret: process.env.JWT_SECRET,
     jwt_expires_in: process.env.JWT_EXPIRES_IN,
     stripe_secret_key: process.env.STRIPE_SECRET_KEY,

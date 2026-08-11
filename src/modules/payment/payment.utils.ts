@@ -10,6 +10,8 @@ export const createStripePaymentSession = async (input: {
   const currency = (input.currency ?? "usd").toLowerCase();
   const unitAmount = Math.round(input.amount * 100);
 
+  const frontendUrl = config.frontend_url ?? "http://localhost:3000";
+
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     payment_method_types: ["card"],
@@ -33,8 +35,8 @@ export const createStripePaymentSession = async (input: {
         unit_amount: unitAmount,
       },
     ],
-    success_url: `${config.app_url ?? "http://localhost:5000"}/payments/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${config.app_url ?? "http://localhost:5000"}/payments/cancel`,
+    success_url: `${frontendUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${frontendUrl}/payment/cancel`,
   });
 
   return {

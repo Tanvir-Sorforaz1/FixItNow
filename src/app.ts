@@ -13,10 +13,16 @@ import technicianRoutes from "./modules/technician/technician.route.js";
 import userRoutes from "./modules/user/user.route.js";
 import notFound from "./middlewares/notFound.js";
 import globalErrorHandler from "./middlewares/globalErrorHandler.js";
+import config from "./config";
 
 const app: Application = express();
 
-app.use(cors());
+app.use(
+    cors({
+        origin: config.frontend_url,
+        credentials: true,
+    })
+);
 app.use(cookieParser());
 
 app.get("/", (_req: Request, res: Response) => {
